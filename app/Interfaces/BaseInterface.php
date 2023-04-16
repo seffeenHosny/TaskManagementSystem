@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Interfaces;
 interface BaseInterface {
 
     // function to get table data

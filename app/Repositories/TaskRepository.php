@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
-use BaseInterface;
+use App\Interfaces\BaseInterface;
 
 class TaskRepository implements BaseInterface
 {
@@ -16,12 +16,12 @@ class TaskRepository implements BaseInterface
         return Task::create($request->validated());
     }
 
-    public function update($request ,$Task){
-        return $Task->update($request->validated());
+    public function update($request ,$task){
+        return $task->update($request->validated());
     }
 
-    public function delete($Task){
-        return $Task->delete();
+    public function delete($task){
+        return $task->delete();
     }
 
 }

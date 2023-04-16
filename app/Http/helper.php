@@ -20,7 +20,7 @@ function message($status = true, $data = [], $message = '', $code = 200)
 
 function requiredIf($var)
 {
-    return $var ? 'required' : 'nullable';
+    return $var ? 'nullable' : 'required';
 }
 
 function getEnumValues(string $table, string $column): array

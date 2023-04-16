@@ -3,8 +3,8 @@
 namespace App\Repositories;
 
 use App\Http\Requests\UserRequest;
+use App\Interfaces\BaseInterface;
 use App\Models\User;
-use BaseInterface;
 
 class UserRepository implements BaseInterface
 {
@@ -40,6 +40,10 @@ class UserRepository implements BaseInterface
 
     public function delete($user){
         return $user->delete();
+    }
+
+    public function getRoleId($user_id){
+        return \DB::table('model_has_roles')->where('model_id' , $user_id)->first();
     }
 
 }

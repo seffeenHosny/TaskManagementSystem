@@ -24,10 +24,9 @@ class UserRequest extends AbstractFormRequest
     public function rules()
     {
         $id = $this->route('user')->id ?? null;
-
         return [
-            'name'=>'required|string|min:3|max|50',
-            'email'=>"required|unique:users,email,except,$id",
+            'name'=>'required|string|min:3|max:50',
+            'email'=>"required|unique:users,email,$id",
             'password'=>[requiredIf($id) , 'min:6' , 'confirmed'],
             'role_id'=>'required|exists:roles,id'
         ];

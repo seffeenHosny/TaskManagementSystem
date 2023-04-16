@@ -17,12 +17,23 @@
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
             <ul class="iq-menu">
-                {{--  <li class="{{ active_link('employees') }}">
-                    <a href="{{ url('dashboard/employees') }}" class="iq-waves-effect">
-                        <img src="{{ asset('assets/images/icons/users.svg') }}" alt="users" class="images-sidebar" />
-                        <span> {{ trans('admin.employees') }} </span>
+                @can('read user')
+                <li class="@yield('users-active')">
+                    <a href="{{ route('users.index') }}" class="iq-waves-effect">
+                        <img src="{{ asset('assets/images/users.png') }}" alt="users" class="images-sidebar" />
+                        <span> {{ __('Users') }} </span>
                     </a>
-                </li>  --}}
+                </li>
+                @endcan
+
+                @can('read task')
+                <li class="@yield('tasks-active')">
+                    <a href="{{ route('tasks.index') }}" class="iq-waves-effect">
+                        <img src="{{ asset('assets/images/tasks.png') }}" alt="tasks" class="images-sidebar" />
+                        <span> {{ __('Tasks') }} </span>
+                    </a>
+                </li>
+                @endcan
             </ul>
         </nav>
         <div class="p-3"></div>

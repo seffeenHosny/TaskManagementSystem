@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Dashboard\TaskController;
+use App\Http\Controllers\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +22,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => [ 'auth']], function () {
+    Route::resource('users', UserController::class)->except('show');
+    Route::resource('tasks', TaskController::class)->except('show');
+
+});
