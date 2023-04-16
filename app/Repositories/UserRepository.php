@@ -2,53 +2,44 @@
 
 namespace App\Repositories;
 
-use App\Repositories\BaseRepository;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
+use BaseInterface;
 
-
-class UserRepository  extends BaseRepository
+class UserRepository implements BaseInterface
 {
-       /**
-     * @var array
-     */
-    protected $fieldSearchable = ['name'];
-
-     /**
-     * Use Search Criteria from request to find from model
-     *
-     * @param  Request $request
-     * @return Collection
-     */
-
-    public function save(Request $request)
-    {
-        return  $this->create($request->all());
-    }
-    /**
-     * Return searchable fields
-     *
-     * @return array
-     */
-    public function getFieldsSearchable()
-    {
-        return $this->fieldSearchable;
-    }
-    /**
-     * Configure the Model
-     **/
-    public function model()
-    {
-        return User::class;
+    public function index(){
+        return User::orderByDesc('id')->paginate(10);
     }
 
-    public function getOrganizers($request){
-        $query= $this->model->where(['type'=>'organizer','status'=>'active']);
-        if($request->has('user_id')){
-            $query= $query->where('id',$request->user_id);
+    public function store($request){
+        $data = $request->only('name' , 'email');
+        $data['password'] = bcrypt($request->password);
+        $user = User::create($request->validated());
+        $user->assignRole($request->role_id);
+        return $user;
+    }
+
+    public function update($request ,$user){
+        $data = $request->only('name' , 'email');
+        if($request->password){
+            $data['password'] = bcrypt($request->password);
         }
-        return $query->paginate(10);
 
+        $user->update($data);
+
+        $user_role = $user->getRoleNames()[0] ?? null;
+        if($user_role){
+            $user->removeRole($user_role);
+        }
+
+        $user->assignRole($request->role_id);
+
+        return $user;
     }
+
+    public function delete($user){
+        return $user->delete();
+    }
+
 }

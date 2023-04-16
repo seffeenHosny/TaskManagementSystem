@@ -7,6 +7,7 @@
  * @param  integer  $code [for response code]
  * @return Response
  */
+
 function message($status = true, $data = [], $message = '', $code = 200)
 {
     return response()->json([
@@ -17,12 +18,19 @@ function message($status = true, $data = [], $message = '', $code = 200)
     ],$code);
 }
 
-function check_required($status){
-    if($status){
-        return 'nullable';
-    }
-    
-    return 'required';
+function requiredIf($var)
+{
+    return $var ? 'required' : 'nullable';
+}
 
+function getEnumValues(string $table, string $column): array
+{
+    $type = DB::select(DB::raw("SHOW COLUMNS FROM $table WHERE Field = '$column'"))[0]->Type;
+    preg_match('/^enum\((.*)\)$/', $type, $matches);
+    $values = [];
+    foreach (explode(',', $matches[1]) as $value) {
+        $values[] = trim($value, "'");
+    }
+    return $values;
 }
 
