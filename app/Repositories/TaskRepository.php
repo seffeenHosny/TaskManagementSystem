@@ -9,7 +9,15 @@ use App\Interfaces\BaseInterface;
 class TaskRepository implements BaseInterface
 {
     public function index(){
-        return Task::with('user')->orderByDesc('id')->paginate(10);
+        $tasks = Task::with('user');
+
+        if(!auth()->user()->hasRole('manager')){
+            $tasks = $tasks->where('user_id' , auth()->id());
+        }
+        
+        $tasks = $tasks->orderByDesc('id')->paginate(10);
+
+        return $tasks;
     }
 
     public function store($request){
@@ -22,6 +30,14 @@ class TaskRepository implements BaseInterface
 
     public function delete($task){
         return $task->delete();
+    }
+
+    public function updateStatus(Task $task , $status){
+        if(!auth()->user()->hasRole('manager') && auth()->id() != $task->user_id){
+            return abort(403);
+        }
+        
+        return $task->update(['status' => $status]);
     }
 
 }

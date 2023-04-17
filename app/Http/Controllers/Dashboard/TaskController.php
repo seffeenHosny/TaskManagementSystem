@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\Models\User;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,8 @@ class TaskController extends Controller
     }
 
     public function edit(Task $task){
-        return view('tasks.form' , compact('Task'));
+        $users = User::role('employee')->pluck('name','id');
+        return view('tasks.form' , compact('task' , 'users'));
     }
 
     public function update(TaskRequest $request , Task $task){
@@ -47,6 +49,16 @@ class TaskController extends Controller
     public function destroy(Task $task){
         $this->service->delete($task);
         return  redirect()->route('tasks.index')->with('success',__('Deleted'));
+    }
+
+    public function start(Task $task){
+        $this->service->updateStatus($task , 'In Progress');        
+        return  redirect()->route('tasks.index')->with('success',__('Updated'));
+    }
+
+    public function complete(Task $task){
+        $this->service->updateStatus($task , 'Completed');        
+        return  redirect()->route('tasks.index')->with('success',__('Updated'));
     }
 
 }

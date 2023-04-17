@@ -26,5 +26,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => [ 'auth']], function () {
     Route::resource('users', UserController::class)->except('show');
     Route::resource('tasks', TaskController::class)->except('show');
-
+    Route::get('tasks/{task}/start', [TaskController::class , 'start'])->name('tasks.start');
+    Route::get('tasks/{task}/complete', [TaskController::class , 'complete'])->name('tasks.complete');
 });

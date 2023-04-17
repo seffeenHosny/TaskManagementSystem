@@ -20,7 +20,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->foreignIdFor(User::class)->constrained();
             $table->date('due_date');
-            $table->enum('status' , ['(Not Started' , 'In Progress' , 'Completed'])->default('(Not Started');
+            $table->enum('status' , ['Not Started' , 'In Progress' , 'Completed'])->default('(Not Started');
             $table->enum('priority' , ['Low' , 'Medium' , 'High'])->default('Low');
             $table->timestamps();
         });

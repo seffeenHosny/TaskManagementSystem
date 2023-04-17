@@ -31,4 +31,9 @@ class TaskService
     public function delete(Task $task){
         return $this->repo->delete($task);
     }
+
+    public function updateStatus(Task $task , $status){
+        return $this->repo->updateStatus($task , $status);
+    }
+
 }

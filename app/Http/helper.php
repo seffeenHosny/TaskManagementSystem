@@ -29,7 +29,7 @@ function getEnumValues(string $table, string $column): array
     preg_match('/^enum\((.*)\)$/', $type, $matches);
     $values = [];
     foreach (explode(',', $matches[1]) as $value) {
-        $values[] = trim($value, "'");
+        $values[trim($value, "'")] = trim($value, "'");
     }
     return $values;
 }
