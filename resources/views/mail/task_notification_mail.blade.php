@@ -1,11 +1,10 @@
 <x-mail::message>
 # Introduction
 
-The body of your message.
+Dear {{$user->name}}
+task {{$task->title}}
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+{{$message}}
 
 Thanks,<br>
 {{ config('app.name') }}
