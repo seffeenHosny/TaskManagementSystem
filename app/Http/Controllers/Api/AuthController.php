@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiLoginRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use JWTAuth;
@@ -13,36 +14,17 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(ApiLoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
 
-        //valid credential
-        $validator = Validator::make($credentials, [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6|max:50'
-        ]);
-
-        //Send failed response if request is not valid
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
-
-            return message(false , [] , ['error' => $validator->messages()] , 422);
-
-        }
-
-        //Request is validated
         //Crean token
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                
-                return message(false , [] , 'Login credentials are invalid.' , 400);
 
+                return message(false , [] , 'Login credentials are invalid.' , 400);
             }
         } catch (JWTException $e) {
-            return $credentials;
-
-
             return message(false , [] , 'Could not create token.' , 500);
 
         }
@@ -53,8 +35,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        auth()->logout();
-        return message(true , [] , 'Logout' , 200);
+        try {
+            JWTAuth::invalidate($request->token);
+            return message(true , [] , 'Logout' , 200);
+        } catch (JWTException $exception) {
+            return message(false , [] , 'Sorry, user cannot be logged out' , 500);
+
+        }
+
     }
 
     public function get_user()

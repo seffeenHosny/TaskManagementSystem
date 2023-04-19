@@ -46,4 +46,8 @@ class UserRepository implements BaseInterface
         return \DB::table('model_has_roles')->where('model_id' , $user_id)->first();
     }
 
+    public function employees(){
+        return User::role('employee')->pluck('name','id');
+    }
+
 }

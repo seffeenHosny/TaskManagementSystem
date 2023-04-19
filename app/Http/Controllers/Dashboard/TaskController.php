@@ -7,14 +7,17 @@ use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     protected $service;
-    public function __construct(TaskService $service)
+    protected $userService;
+    public function __construct(TaskService $service , UserService $userService)
     {
         $this->service = $service;
+        $this->userService = $userService;
         $this->middleware('permission:read task', ['only' => ['index']]);
         $this->middleware('permission:create task', ['only' => ['create' , 'store']]);
         $this->middleware('permission:update task', ['only' => ['edit' , 'update']]);
@@ -37,7 +40,7 @@ class TaskController extends Controller
     }
 
     public function edit(Task $task){
-        $users = User::role('employee')->pluck('name','id');
+        $users = $this->userService->employees();
         return view('tasks.form' , compact('task' , 'users'));
     }
 
@@ -52,12 +55,12 @@ class TaskController extends Controller
     }
 
     public function start(Task $task){
-        $this->service->updateStatus($task , 'In Progress');        
+        $this->service->updateStatus($task , 'In Progress');
         return  redirect()->route('tasks.index')->with('success',__('Updated'));
     }
 
     public function complete(Task $task){
-        $this->service->updateStatus($task , 'Completed');        
+        $this->service->updateStatus($task , 'Completed');
         return  redirect()->route('tasks.index')->with('success',__('Updated'));
     }
 

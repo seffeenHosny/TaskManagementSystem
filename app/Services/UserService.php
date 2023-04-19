@@ -35,4 +35,8 @@ class UserService
     public function getRoleId($user_id){
         return $this->repo->getRoleId($user_id);
     }
+
+    public function employees(){
+        return $this->repo->employees();
+    }
 }

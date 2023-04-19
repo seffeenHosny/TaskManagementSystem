@@ -16,7 +16,7 @@ class TaskResource extends JsonResource
     {
         $arr = [
             'id'=>$this->id,
-            'title'=>$this->name,
+            'title'=>$this->title,
             'description'=>$this->description,
             'due_date'=>$this->due_date,
             'status'=>$this->status,

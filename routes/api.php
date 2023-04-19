@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,9 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('logout', [AuthController::class, 'logout']);
-    Route::get('info', [ApiController::class, 'get_user']);
+    Route::get('info', [AuthController::class, 'get_user']);
     Route::apiResource('tasks' ,TaskController::class);
+    Route::post('tasks/{task}/start', [TaskController::class, 'start']);
+    Route::post('tasks/{task}/complete', [TaskController::class, 'complete']);
+    Route::get('employees', [UserController::class, 'employees']);
 });
